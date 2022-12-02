@@ -15,7 +15,6 @@ fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteA
     .toString(16)
     .padStart(32, '0')
 
-
 fun <T> List<T>.splitBy(predicate: (T) -> Boolean): List<List<T>> = this
     .splitIndices(predicate)
     .windowed(size = 2, step = 2) { (from, to) ->
@@ -30,3 +29,12 @@ private fun <T> List<T>.splitIndices(predicate: (T) -> Boolean): List<Int> = thi
             else -> emptyList()
         }
     }
+
+fun String.toPair(delimiter: String, limit: Int = 1): Pair<String, String> {
+    val split = this.split(delimiter)
+    split.onEach {
+        require(it.length <= limit) { "$it is too large with limit $limit" }
+    }
+    require(split.size == 2) { "can't make a pair out of '$this'" }
+    return split.first() to split.last()
+}
