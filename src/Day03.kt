@@ -1,24 +1,42 @@
 fun main() {
 
     fun part1(input: List<String>): Int {
-        return 0
+        return input.sumOf { rucksack ->
+            val (firstCompartment, secondCompartment) = rucksack.chunked(rucksack.length / 2) { it.toSet() }
+            val item = firstCompartment.intersect(secondCompartment).first()
+            item.priority()
+         }
     }
 
     fun part2(input: List<String>): Int {
-        return 0
+        return input.chunked(3)
+        .sumOf { rucksacks ->
+            val badge = rucksacks
+                .fold(rucksacks.first().toSet()) { acc, rucksack -> 
+                    acc.intersect(rucksack.toSet())
+                }.first()
+            badge.priority()
+        }
     }
 
-    val inputLines = readInput("Day03_test")
-    check(part1(inputLines) == 15)
-    check(part2(inputLines) == 12)
-
+    val testInput = readInput("Day03_test")
     val input = readInput("Day03")
+
+    check(part1(testInput) == 157)
     part1(input).let {
-        check(it == 11666)
         println(it)
+        check(it == 7821)
     }
+    
+    check(part2(testInput) == 70)
     part2(input).let {
-        check(it == 12767)
         println(it)
+        check(it == 2752)
     }
+}
+
+fun Char.priority() = when (this) {
+    in 'a'..'z' -> this - 'a' + 1
+    in 'A'..'Z' -> this - 'A' + 27
+    else -> error("invalid input")
 }
