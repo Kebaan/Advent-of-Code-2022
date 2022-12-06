@@ -8,6 +8,7 @@ fun Int.asTwoDigitNumber(): String = "%02d".format(this)
 /**
  * Converts string to utils.md5 hash.
  */
+@Suppress("unused")
 fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray()))
     .toString(16)
     .padStart(32, '0')
@@ -40,3 +41,10 @@ fun String.asIntRange(): IntRange {
     return this.split("-")
         .let { (from, to) -> from.toInt()..to.toInt() }
 }
+@Suppress("unused")
+infix fun IntRange.overlaps(other: IntRange): Boolean =
+    first <= other.last && other.first <= last
+@Suppress("unused")
+infix fun IntRange.fullyOverlaps(other: IntRange): Boolean =
+    first <= other.first && other.last >= last
+
