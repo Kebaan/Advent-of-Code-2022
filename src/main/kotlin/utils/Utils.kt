@@ -35,3 +35,8 @@ fun String.toPair(delimiter: String, limit: Int = 1): Pair<String, String> {
     require(split.size == 2) { "can't make a pair out of '$this'" }
     return split.first() to split.last()
 }
+
+fun String.asIntRange(): IntRange {
+    return this.split("-")
+        .let { (from, to) -> from.toInt()..to.toInt() }
+}
