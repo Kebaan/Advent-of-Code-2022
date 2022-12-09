@@ -1,42 +1,52 @@
 package days
 
 import Puzzle
+import days.Day07.VirtualEntry.VirtualDirectory
+import days.Day07.VirtualEntry.VirtualFile
 import utils.readInput
 
+typealias VirtualPath = String
+typealias FileSize = Int
+
 object Day07 : Puzzle<Int> {
-    private val PATTERN = """[$] cd (.*)|(\d+).*""".toRegex()
+    private val CD_COMMAND_REGEX = """[$] cd (.*)""".toRegex()
+    private val SIZE_REGEX = """(\d+) (.*)""".toRegex()
+    private const val rootPath = "/"
 
-    override fun part1(input: List<String>): Int {
-        val sizes = parseInput(input)
-        return sizes.values.sumOf { if (it <= 100000) it else 0 }
-    }
-
-    private fun parseInput(input: List<String>)= buildMap {
-        put("", 0)
-        var cwd = ""
+    private fun parseInput(input: List<String>): VirtualFileSystem {
+        val fileSystem = VirtualFileSystem("/")
+        var cwd = rootPath
         for (line in input) {
-            val match = PATTERN.matchEntire(line) ?: continue
-            match.groups[1]?.value?.let { dir ->
+            CD_COMMAND_REGEX.matchEntire(line)?.destructured?.let { (dir) ->
                 cwd = when (dir) {
-                    "/" -> ""
-                    ".." -> cwd.substringBeforeLast('/', "")
-                    else -> if (cwd.isEmpty()) dir else "$cwd/$dir"
+                    rootPath -> rootPath
+                    ".." -> fileSystem.findParentPath(cwd)
+                    else -> if (cwd == rootPath) "/$dir" else "$cwd/$dir"
                 }
-            } ?: match.groups[2]?.value?.toIntOrNull()?.let { size ->
-                var dir = cwd
-                while (true) {
-                    put(dir, getOrElse(dir) { 0 } + size)
-                    if (dir.isEmpty()) break
-                    dir = dir.substringBeforeLast('/', "")
-                }
+                fileSystem.addDirectoryIfAbsent(cwd)
+            } ?: SIZE_REGEX.matchEntire(line)?.destructured?.let { (size, fileName) ->
+                val dir = if (cwd == rootPath) "/$fileName" else "$cwd/$fileName"
+                fileSystem.addFileIfAbsent(dir, size.toInt())
             }
         }
+        return fileSystem
+    }
+
+    override fun part1(input: List<String>): Int {
+        val fileSystem = parseInput(input)
+        return fileSystem.findAllEntriesBy {
+            (it is VirtualDirectory && it.size <= 100000)
+        }.sumOf { it.size }
     }
 
     override fun part2(input: List<String>): Int {
-        val sizes = parseInput(input)
-        val total = sizes.getValue("")
-        return sizes.values.asSequence().filter { 70000000 - (total - it) >= 30000000 }.min()
+        val fileSystem = parseInput(input)
+        val totalDiskSpace = 70_000_000
+        val totalUsed = fileSystem.lookupSize(rootPath)
+        val neededUnusedSpace = 30_000_000
+        return fileSystem.findAllEntriesBy {
+            it is VirtualDirectory && totalDiskSpace - (totalUsed - it.size) >= neededUnusedSpace
+        }.minOf { it.size }
     }
 
     override fun doSolve() {
@@ -77,6 +87,64 @@ object Day07 : Puzzle<Int> {
         part2(input).let {
             println(it)
             check(it == 1300850)
+        }
+    }
+
+    sealed interface VirtualEntry {
+        val path: VirtualPath
+        val size: FileSize
+
+        data class VirtualDirectory(override val path: VirtualPath, override val size: FileSize) : VirtualEntry
+        data class VirtualFile(override val path: VirtualPath, override val size: FileSize) : VirtualEntry
+    }
+
+    class VirtualFileSystem(
+        private val rootPath: VirtualPath,
+    ) {
+        private val data: MutableMap<VirtualPath, VirtualEntry> =
+            mutableMapOf(rootPath to VirtualDirectory(rootPath, 0))
+
+        fun findAllEntriesBy(predicate: (VirtualEntry) -> Boolean): List<VirtualEntry> {
+            return data.filter { predicate(it.value) }.map { it.value }.toList()
+        }
+
+        fun findParentPath(orgPath: VirtualPath): VirtualPath {
+            val parentPath = orgPath.substringBeforeLast('/')
+            return parentPath.ifEmpty { rootPath }
+        }
+
+        fun lookupSize(virtualPath: VirtualPath): FileSize {
+            return get(virtualPath).size
+        }
+
+        fun addDirectoryIfAbsent(path: VirtualPath) {
+            data.computeIfAbsent(path) { VirtualDirectory(it, 0) }
+        }
+
+        fun addFileIfAbsent(path: VirtualPath, size: FileSize) {
+            data.computeIfAbsent(path) {
+                var dir = path
+                while (true) {
+                    dir = findParentPath(dir)
+                    updateSizes(dir, size)
+                    if (dir == rootPath) break
+                }
+                VirtualFile(path, size)
+            }
+        }
+
+        fun updateSizes(path: VirtualPath, size: FileSize) {
+            val entry = get(path)
+            val newSize = entry.size + size
+            val updatedEntry = when (entry) {
+                is VirtualDirectory -> entry.copy(size = newSize)
+                is VirtualFile -> entry.copy(size = newSize)
+            }
+            data[path] = updatedEntry
+        }
+
+        fun get(path: VirtualPath): VirtualEntry {
+            return data[path] ?: error("invalid input")
         }
     }
 }
