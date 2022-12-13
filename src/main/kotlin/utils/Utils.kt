@@ -41,10 +41,21 @@ fun String.asIntRange(): IntRange {
     return this.split("-")
         .let { (from, to) -> from.toInt()..to.toInt() }
 }
+
 @Suppress("unused")
 infix fun IntRange.overlaps(other: IntRange): Boolean =
     first <= other.last && other.first <= last
+
 @Suppress("unused")
 infix fun IntRange.fullyOverlaps(other: IntRange): Boolean =
     first <= other.first && other.last >= last
 
+inline fun <T> Iterable<T>.takeUntil(predicate: (T) -> Boolean): List<T> {
+    val list = ArrayList<T>()
+    for (item in this) {
+        list.add(item)
+        if (predicate(item))
+            break
+    }
+    return list
+}

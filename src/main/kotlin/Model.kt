@@ -3,3 +3,5 @@ sealed interface GameResult {
     object Lose : GameResult
     object Draw : GameResult
 }
+
+data class Point(val x: Int, val y: Int)
