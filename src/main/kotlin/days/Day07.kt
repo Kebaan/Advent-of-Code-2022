@@ -1,14 +1,17 @@
 package days
 
-import Puzzle
 import days.Day07.VirtualEntry.VirtualDirectory
 import days.Day07.VirtualEntry.VirtualFile
-import utils.readInput
+import utils.Day
 
 typealias VirtualPath = String
 typealias FileSize = Int
 
-object Day07 : Puzzle<Int> {
+fun main() {
+    Day07.solve()
+}
+
+object Day07 : Day<Int>(2022, 7) {
     private val CD_COMMAND_REGEX = """[$] cd (.*)""".toRegex()
     private val SIZE_REGEX = """(\d+) (.*)""".toRegex()
     private const val rootPath = "/"
@@ -50,40 +53,11 @@ object Day07 : Puzzle<Int> {
     }
 
     override fun doSolve() {
-        val testInput = """
-            $ cd /
-            $ ls
-            dir a
-            14848514 b.txt
-            8504156 c.dat
-            dir d
-            $ cd a
-            $ ls
-            dir e
-            29116 f
-            2557 g
-            62596 h.lst
-            $ cd e
-            $ ls
-            584 i
-            $ cd ..
-            $ cd ..
-            $ cd d
-            $ ls
-            4060174 j
-            8033020 d.log
-            5626152 d.ext
-            7214296 k""".trimIndent().lines()
-        check(part1(testInput) == 95437)
-
-        val input = readInput(2022, 7)
-
         part1(input).let {
             println(it)
             check(it == 1644735)
         }
 
-        check(part2(testInput) == 24933642)
         part2(input).let {
             println(it)
             check(it == 1300850)
@@ -147,4 +121,29 @@ object Day07 : Puzzle<Int> {
             return data[path] ?: error("invalid input")
         }
     }
+
+    override val testInput = """
+            $ cd /
+            $ ls
+            dir a
+            14848514 b.txt
+            8504156 c.dat
+            dir d
+            $ cd a
+            $ ls
+            dir e
+            29116 f
+            2557 g
+            62596 h.lst
+            $ cd e
+            $ ls
+            584 i
+            $ cd ..
+            $ cd ..
+            $ cd d
+            $ ls
+            4060174 j
+            8033020 d.log
+            5626152 d.ext
+            7214296 k""".trimIndent().lines()
 }

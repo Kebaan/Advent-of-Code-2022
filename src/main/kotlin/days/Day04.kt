@@ -1,10 +1,14 @@
 package days
 
-import Puzzle
+import utils.Day
 import utils.asIntRange
 import utils.readInput
 
-object Day04 : Puzzle<Int> {
+fun main() {
+    Day04.solve()
+}
+
+object Day04 : Day<Int>(2022, 4) {
     private fun parseGroups(input: List<String>): List<Pair<IntRange, IntRange>> {
         return input.map { group ->
             group.substringBefore(",").asIntRange() to group.substringAfter(",").asIntRange()
@@ -28,25 +32,22 @@ object Day04 : Puzzle<Int> {
     }
 
     override fun doSolve() {
-        val testInput = """
+        part1(input).let {
+            println(it)
+            check(it == 305)
+        }
+
+        part2(input).let {
+            println(it)
+            check(it == 811)
+        }
+    }
+
+    override val testInput = """
             2-4,6-8
             2-3,4-5
             5-7,7-9
             2-8,3-7
             6-6,4-6
             2-6,4-8""".trimIndent().lines()
-        check(part1(testInput) == 2)
-
-        val input = readInput(2022, 4)
-        part1(input).let {
-            println(it)
-            check(it == 305)
-        }
-
-        check(part2(testInput) == 4)
-        part2(input).let {
-            println(it)
-            check(it == 811)
-        }
-    }
 }

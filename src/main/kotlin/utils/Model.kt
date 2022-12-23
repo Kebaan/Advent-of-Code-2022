@@ -1,3 +1,5 @@
+package utils
+
 sealed interface GameResult {
     object Win : GameResult
     object Lose : GameResult

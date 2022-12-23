@@ -1,9 +1,12 @@
 package days
 
-import Puzzle
-import utils.readInput
+import utils.Day
 
-object DayXX : Puzzle<Int> {
+fun main() {
+    DayXX.solve()
+}
+
+object DayXX : Day<Int>(2022, 0) {
     override fun part1(input: List<String>): Int {
         return 0
     }
@@ -13,21 +16,18 @@ object DayXX : Puzzle<Int> {
     }
 
     override fun doSolve() {
-        val input = readInput(2022, 8)
-        val testInput = """
-            
-            """.trimIndent().lines()
-        check(part1(testInput) == 0)
-
         part1(input).let {
             println(it)
             check(it == 0)
         }
 
-        check(part2(testInput) == 0)
         part2(input).let {
             println(it)
             check(it == 0)
         }
     }
+
+    override val testInput = """
+        
+        """.trimIndent().lines()
 }

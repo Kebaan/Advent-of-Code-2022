@@ -1,9 +1,13 @@
 package days
 
-import Puzzle
+import utils.Day
 import utils.readInput
 
-object Day03 : Puzzle<Int> {
+fun main() {
+    Day03.solve()
+}
+
+object Day03 : Day<Int>(2022, 3) {
     private fun Char.priority() = when (this) {
         in 'a'..'z' -> this - 'a' + 1
         in 'A'..'Z' -> this - 'A' + 27
@@ -30,25 +34,22 @@ object Day03 : Puzzle<Int> {
     }
 
     override fun doSolve() {
-        val testInput = """
+        part1(input).let {
+            println(it)
+            check(it == 7821)
+        }
+
+        part2(input).let {
+            println(it)
+            check(it == 2752)
+        }
+    }
+
+    override val testInput = """
         vJrwpWtwJgWrhcsFMMfFFhFp
         jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
         PmmdzqPrVvPwwTWBwg
         wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
         ttgJtRGJQctTZtZT
         CrZsJsPPZsGzwwsLwLmpwMDw""".trimIndent().lines()
-        check(part1(testInput) == 157)
-
-        val input = readInput(2022, 3)
-        part1(input).let {
-            println(it)
-            check(it == 7821)
-        }
-
-        check(part2(testInput) == 70)
-        part2(input).let {
-            println(it)
-            check(it == 2752)
-        }
-    }
 }

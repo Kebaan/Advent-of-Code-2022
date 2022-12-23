@@ -1,14 +1,18 @@
+val kotestVersion = "5.5.4"
+
 plugins {
     kotlin("jvm") version "1.7.22"
-    application
+    id("io.kotest") version "0.3.8"
 }
 
 repositories {
     mavenCentral()
 }
 
-application {
-    mainClass.set("MainKt")
+dependencies {
+    testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
+    testImplementation("io.kotest:kotest-framework-engine-jvm:$kotestVersion")
+    testImplementation("io.kotest:kotest-framework-datatest-jvm:$kotestVersion")
 }
 
 tasks {

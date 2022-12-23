@@ -1,17 +1,16 @@
 package days
 
-import GameResult
-import GameResult.Draw
-import GameResult.Lose
-import GameResult.Win
-import Puzzle
-import days.Day02.HandShape.Paper
-import days.Day02.HandShape.Rock
-import days.Day02.HandShape.Scissor
-import utils.readInput
+import days.Day02.HandShape.*
+import utils.Day
+import utils.GameResult
+import utils.GameResult.*
 import utils.toPair
 
-object Day02 : Puzzle<Int> {
+fun main() {
+    Day02.solve()
+}
+
+object Day02 : Day<Int>(2022, 2) {
     private fun calculateScoreForRound(round: RockPaperScissorsGame): Int {
         val outcomeScore = when (round.play()) {
             Lose -> 0
@@ -57,19 +56,11 @@ object Day02 : Puzzle<Int> {
     }
 
     override fun doSolve() {
-        val inputLines = """
-            A Y
-            B X
-            C Z""".trimIndent().lines()
-        check(part1(inputLines) == 15)
-
-        val input = readInput(2022, 2)
         part1(input).let {
             check(it == 11666)
             println(it)
         }
 
-        check(part2(inputLines) == 12)
         part2(input).let {
             check(it == 12767)
             println(it)
@@ -119,4 +110,9 @@ object Day02 : Puzzle<Int> {
             override fun losingAgainst() = Rock
         }
     }
+
+    override val testInput = """
+            A Y
+            B X
+            C Z""".trimIndent().lines()
 }

@@ -1,10 +1,13 @@
 package days
 
-import Puzzle
-import utils.readInput
+import utils.Day
 import utils.splitBy
 
-object Day01 : Puzzle<Int> {
+fun main() {
+    Day01.solve()
+}
+
+object Day01 : Day<Int>(2022, 1) {
     private fun calculateSumOfNLargest(bags: List<List<String>>, n: Int) = bags.map { bagOfCalories ->
         bagOfCalories.sumOf { it.toInt() }
     }.sortedDescending().take(n).sum()
@@ -20,7 +23,18 @@ object Day01 : Puzzle<Int> {
     }
 
     override fun doSolve() {
-        val testInput = """
+        part1(input).let {
+            println(it)
+            check(it == 74198)
+        }
+
+        part2(input).let {
+            println(it)
+            check(it == 209914)
+        }
+    }
+
+    override val testInput = """
                     1000
                     2000
                     3000
@@ -35,18 +49,4 @@ object Day01 : Puzzle<Int> {
                     9000
                     
                     10000""".trimIndent().lines()
-        check(part1(testInput) == 24000)
-
-        val input = readInput(2022, 1)
-        part1(input).let {
-            println(it)
-            check(it == 74198)
-        }
-
-        check(part2(testInput) == 45000)
-        part2(input).let {
-            println(it)
-            check(it == 209914)
-        }
-    }
 }

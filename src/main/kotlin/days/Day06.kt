@@ -1,9 +1,12 @@
 package days
 
-import Puzzle
-import utils.readInput
+import utils.Day
 
-object Day06 : Puzzle<Int> {
+fun main() {
+    Day06.solve()
+}
+
+object Day06 : Day<Int>(2022, 6) {
     private fun locateMarker(input: String, size: Int): Int {
         return input
             .windowed(size, 1)
@@ -15,7 +18,7 @@ object Day06 : Puzzle<Int> {
     }
 
     private fun locateStartOfPacketMarker(input: String): Int {
-        return locateMarker(input ,4)
+        return locateMarker(input, 4)
     }
 
     private fun locateStartOfMessageMarker(input: String): Int {
@@ -31,20 +34,16 @@ object Day06 : Puzzle<Int> {
     }
 
     override fun doSolve() {
-        val testInput = listOf("mjqjpqmgbljsphdztnvjfqwrcgsmlb")
-        check(part1(testInput) == 7)
-
-        val input = readInput(2022, 6)
-
         part1(input).let {
             println(it)
             check(it == 1892)
         }
 
-        check(part2(testInput) == 19)
         part2(input).let {
             println(it)
             check(it == 2313)
         }
     }
+
+    override val testInput = listOf("mjqjpqmgbljsphdztnvjfqwrcgsmlb")
 }

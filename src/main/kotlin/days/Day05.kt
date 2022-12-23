@@ -1,13 +1,21 @@
 package days
 
-import Puzzle
-import utils.readInput
+import utils.Day
 import utils.splitBy
-import java.util.TreeMap
+import java.util.*
+import kotlin.collections.ArrayDeque
+import kotlin.collections.component1
+import kotlin.collections.component2
 
 typealias Crate = Char
-object Day05 : Puzzle<String> {
+
+fun main() {
+    Day05.solve()
+}
+
+object Day05 : Day<String>(2022, 5) {
     data class Move(val amount: Int, val from: Int, val to: Int)
+
     private val MOVE_REGEX = """move (\d+) from (\d+) to (\d+)""".toRegex()
 
     private fun parseInput(input: List<String>): Pair<TreeMap<Int, ArrayDeque<Crate>>, List<Move>> {
@@ -65,29 +73,25 @@ object Day05 : Puzzle<String> {
     }
 
     override fun doSolve() {
-        val testInput = """
-                                [D]    
-                            [N] [C]    
-                            [Z] [M] [P]
-                             1   2   3 
-                            
-                            move 1 from 2 to 1
-                            move 3 from 1 to 3
-                            move 2 from 2 to 1
-                            move 1 from 1 to 2""".trimIndent().lines()
-        check(part1(testInput) == "CMZ")
-
-        val input = readInput(2022, 5)
-
         part1(input).let {
             println(it)
             check(it == "TBVFVDZPN")
         }
 
-        check(part2(testInput) == "MCD")
         part2(input).let {
             println(it)
             check(it == "VLCWHTDSZ")
         }
     }
+
+    override val testInput = """
+                    [D]    
+                [N] [C]    
+                [Z] [M] [P]
+                 1   2   3 
+                
+                move 1 from 2 to 1
+                move 3 from 1 to 3
+                move 2 from 2 to 1
+                move 1 from 1 to 2""".trimIndent().lines()
 }
