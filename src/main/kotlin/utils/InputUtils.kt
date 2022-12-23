@@ -9,7 +9,24 @@ import java.nio.file.Paths
 import kotlin.io.path.createDirectories
 
 private const val FILE_SUFFIX = ".txt"
+private const val AOC_SESSION_TOKEN_ENV = "AOC_SESSION_TOKEN"
+private val AOC_SESSION_TOKEN_FILE = "${getUserHome()}${File.separator}.aocsession"
+
 private fun fileNameFrom(directory: String, day: Int) = "${directory}Day${day.asTwoDigitNumber()}$FILE_SUFFIX"
+
+fun getUserHome(): String = System.getProperty("user.home")
+
+fun getAOCSessionToken(): String? {
+    System.getenv(AOC_SESSION_TOKEN_ENV)?.let { return it }
+    val aocSessionTokenFile = File(AOC_SESSION_TOKEN_FILE)
+
+    return when {
+        aocSessionTokenFile.exists() ->
+            aocSessionTokenFile.readLines(charset = Charsets.UTF_8).first()
+
+        else -> null
+    }
+}
 
 fun readInput(year: Int, day: Int): List<String> {
     val directory = "src/main/resources/$year/"
@@ -21,16 +38,16 @@ fun readInput(year: Int, day: Int): List<String> {
 }
 
 private fun downloadFile(year: Int, day: Int, directory: String): File {
-    System.getenv("AOC_SESSION_TOKEN")?.let {
+    getAOCSessionToken()?.let {
         Paths.get(directory).createDirectories()
         val aocUrl = URL("https://adventofcode.com/$year/day/$day/input")
         val inputStream = urlToInputStream(aocUrl, mapOf("cookie" to "session=$it"))
-            ?: error("something wrong with url config, maybe update AOC_SESSION_TOKEN?")
+            ?: error("something wrong with url config, maybe update AOC_SESSION_TOKEN or $AOC_SESSION_TOKEN_FILE?")
 
         val fileName = fileNameFrom(directory, day)
         Files.copy(inputStream, Paths.get(fileName))
         return File(fileName)
-    } ?: error("set AOC_SESSION_TOKEN environment variable")
+    } ?: error("set AOC_SESSION_TOKEN environment variable or add it to $AOC_SESSION_TOKEN_FILE")
 }
 
 private fun urlToInputStream(url: URL, args: Map<String, String>): InputStream? {

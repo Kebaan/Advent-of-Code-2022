@@ -9,7 +9,7 @@ private data class PuzzleAnswer<T>(
     val day: Puzzle<T>,
     val part1Expected: T,
     val part2Expected: T,
-) : WithDataTestName{
+) : WithDataTestName {
     override fun dataTestName() = "Testing ${day.javaClass.simpleName}"
 }
 
@@ -23,6 +23,7 @@ class DailyPuzzles : FunSpec({
         PuzzleAnswer(Day06, 7, 19),
         PuzzleAnswer(Day07, 95437, 24933642),
         PuzzleAnswer(Day08, 21, 8),
+        PuzzleAnswer(Day09, 13, 8),
     ) { (day, part1Expected, part2Expected) ->
         println("part 1 expected: $part1Expected")
         day.part1(day.testInput) shouldBe part1Expected
