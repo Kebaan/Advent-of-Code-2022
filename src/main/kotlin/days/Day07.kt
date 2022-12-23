@@ -107,7 +107,7 @@ object Day07 : Day<Int>(2022, 7) {
             }
         }
 
-        fun updateSizes(path: VirtualPath, size: FileSize) {
+        private fun updateSizes(path: VirtualPath, size: FileSize) {
             val entry = get(path)
             val newSize = entry.size + size
             val updatedEntry = when (entry) {

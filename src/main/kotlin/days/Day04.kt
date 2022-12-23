@@ -2,7 +2,6 @@ package days
 
 import utils.Day
 import utils.asIntRange
-import utils.readInput
 
 fun main() {
     Day04.solve()

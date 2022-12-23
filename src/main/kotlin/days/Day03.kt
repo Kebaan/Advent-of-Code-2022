@@ -1,7 +1,6 @@
 package days
 
 import utils.Day
-import utils.readInput
 
 fun main() {
     Day03.solve()
