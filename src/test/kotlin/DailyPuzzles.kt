@@ -23,12 +23,28 @@ class DailyPuzzles : FunSpec({
         PuzzleAnswer(Day06, 7, 19),
         PuzzleAnswer(Day07, 95437, 24933642),
         PuzzleAnswer(Day08, 21, 8),
-        PuzzleAnswer(Day09, 13, 8),
+        PuzzleAnswer(Day09, 13, 1),
     ) { (day, part1Expected, part2Expected) ->
         println("part 1 expected: $part1Expected")
         day.part1(day.testInput) shouldBe part1Expected
 
         println("part 2 expected: $part2Expected")
         day.part2(day.testInput) shouldBe part2Expected
+    }
+
+    test("day 9 extra test input") {
+        val day = Day09
+        day.part2(
+            """
+            R 5
+            U 8
+            L 8
+            D 3
+            R 17
+            D 10
+            L 25
+            U 20
+        """.trimIndent().lines()
+        ) shouldBe 36
     }
 })
